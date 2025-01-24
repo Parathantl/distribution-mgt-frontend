@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { addItem } from '../../api/itemService';
+import Input from '../../UI/Input';
 
 const AddItem = () => {
   const [name, setName] = useState('');
@@ -16,21 +17,21 @@ const AddItem = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input
+      <Input
         type="text"
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Item Name"
         required
       />
-      <input
+      <Input
         type="number"
         value={price}
         onChange={(e) => setPrice(parseFloat(e.target.value))}
         placeholder="Price"
         required
       />
-      <input
+      <Input
         type="number"
         value={stock}
         onChange={(e) => setStock(parseInt(e.target.value))}

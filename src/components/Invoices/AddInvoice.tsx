@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { addInvoice } from '../../api/invoiceService';
 import { getShops } from '../../api/shopService';
 import { getItems } from '../../api/itemService';
+import Input from '../../UI/Input';
+import Select from '../../UI/Select';
 
-// Define the types for shops and items
 interface Shop {
   _id: string;
   name: string;
@@ -16,7 +17,7 @@ interface Item {
 }
 
 interface InvoiceItem {
-  item: string; // Item ID
+  item: string;
   quantity: number;
 }
 
@@ -27,7 +28,6 @@ const AddInvoice: React.FC = () => {
   const [itemList, setItemList] = useState<Item[]>([]);
   const [totalAmount, setTotalAmount] = useState<number>(0);
 
-  // Fetch shops and items when the component loads
   useEffect(() => {
     const fetchData = async () => {
       const shops = await getShops();
@@ -39,7 +39,6 @@ const AddInvoice: React.FC = () => {
     fetchData();
   }, []);
 
-  // Calculate total amount whenever items or their quantities change
   useEffect(() => {
     const calculateTotal = () => {
       const total = items.reduce((sum, currentItem) => {
@@ -76,63 +75,69 @@ const AddInvoice: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Create Invoice</h2>
+    <form onSubmit={handleSubmit} className="p-6 bg-white rounded-lg shadow-md max-w-md mx-auto">
+      <h2 className="text-xl font-bold mb-4">Create Invoice</h2>
 
       {/* Shop Dropdown */}
-      <div>
-        <label>Shop:</label>
-        <select value={shop} onChange={(e) => setShop(e.target.value)} required>
-          <option value="">Select a Shop</option>
-          {shopList.map((shop) => (
-            <option key={shop._id} value={shop._id}>
-              {shop.name}
-            </option>
-          ))}
-        </select>
-      </div>
+      <Select
+        label="Shop"
+        value={shop}
+        onChange={(e) => setShop(e.target.value)}
+        options={shopList.map((s) => ({ value: s._id, label: s.name }))}
+        required
+      />
 
       {/* Items Section */}
-      <h3>Items</h3>
+      <h3 className="text-lg font-semibold mt-4 mb-2">Items</h3>
       {items.map((item, index) => (
-        <div key={index} style={{ marginBottom: '10px' }}>
+        <div key={index} className="flex items-center space-x-2 mb-2">
           {/* Item Dropdown */}
-          <select
+          <Select
             value={item.item}
             onChange={(e) => handleItemChange(index, 'item', e.target.value)}
+            options={itemList.map((itemOption) => ({
+              value: itemOption._id,
+              label: `${itemOption.name} ($${itemOption.price})`,
+            }))}
             required
-          >
-            <option value="">Select an Item</option>
-            {itemList.map((itemOption) => (
-              <option key={itemOption._id} value={itemOption._id}>
-                {itemOption.name} (${itemOption.price})
-              </option>
-            ))}
-          </select>
+          />
           {/* Quantity Input */}
-          <input
+          <Input
             type="number"
             value={item.quantity}
             onChange={(e) => handleItemChange(index, 'quantity', parseInt(e.target.value))}
             placeholder="Quantity"
             required
           />
-          <button type="button" onClick={() => handleRemoveItem(index)}>
+          <button
+            type="button"
+            className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+            onClick={() => handleRemoveItem(index)}
+          >
             Remove
           </button>
         </div>
       ))}
 
       {/* Add Item Button */}
-      <button type="button" onClick={handleAddItem}>
+      <button
+        type="button"
+        onClick={handleAddItem}
+        className="mt-2 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+      >
         Add More Items
       </button>
 
       {/* Total Amount Display */}
-      <h4>Total Amount: ${totalAmount.toFixed(2)}</h4>
+      <h4 className="text-lg font-semibold mt-4">Total Amount: ${totalAmount.toFixed(2)}</h4>
 
       {/* Submit Button */}
-      <button type="submit">Add Invoice</button>
+      <button
+        type="submit"
+        className="mt-4 bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 w-full"
+      >
+        Add Invoice
+      </button>
     </form>
   );
 };
