@@ -1,7 +1,13 @@
 import api from './api';
 
-interface InvoiceItem {
-  item: string;
+interface Item {
+  _id: string;
+  item_name: string;
+  unit_price: number;
+}
+
+export interface InvoiceItem {
+  item: Item;
   quantity: number;
 }
 

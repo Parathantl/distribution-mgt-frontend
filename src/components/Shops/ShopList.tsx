@@ -37,7 +37,7 @@ const ShopList = () => {
             className="p-4 border rounded shadow flex justify-between items-center"
           >
             <div>
-              <h2 className="font-bold">{shop.name}</h2>
+              <h2 className="font-bold">{shop.shop_name}</h2>
               <p>{shop.location}</p>
             </div>
           </div>
