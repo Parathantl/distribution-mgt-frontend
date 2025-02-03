@@ -1,13 +1,13 @@
 import api from './api';
 
-// Fetch all items
-export const getItems = async () => {
+// Fetch all Products
+export const getProducts = async () => {
   const response = await api.get('/items');
   return response.data;
 };
 
 // Add a new item
-export const addItem = async (item: { itemName: string; unitPrice: number; stock: number }) => {
+export const addItem = async (item: { itemName: string; unitPrice: number; mrp:  number; stock: number }) => {
   const response = await api.post('/items', item);
   return response.data;
 };

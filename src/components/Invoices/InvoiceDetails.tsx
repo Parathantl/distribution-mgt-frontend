@@ -61,7 +61,7 @@ const InvoiceDetails = () => {
     doc.text(`Date: ${new Date(invoice.created_at).toLocaleDateString()}`, 20, 66);
   
     // ** Invoice Table (Item Details) **
-    const tableColumn = ['Item Name', 'Unit Price (Rs.)', 'Quantity', 'Total (Rs.)'];
+    const tableColumn = ['Product Name', 'Unit Price (Rs.)', 'Quantity', 'Total (Rs.)'];
     const tableRows: (string | number)[][] = [];
   
     invoice.items.forEach((item: { item_id: string; item_name: string; unit_price: string; quantity: number }) => {
@@ -87,7 +87,7 @@ const InvoiceDetails = () => {
     // ** Total Calculation **
     let finalY = doc.lastAutoTable.finalY + 10;
     doc.setFontSize(12);
-    doc.text(`Total Items: ${invoice.items.length}`, 20, finalY);
+    doc.text(`Total Products: ${invoice.items.length}`, 20, finalY);
     doc.text(`Subtotal: Rs. ${parseFloat(invoice.total_amount).toFixed(2)}`, 150, finalY);
     finalY += 8;
   
@@ -115,7 +115,7 @@ const InvoiceDetails = () => {
         <p className="text-gray-500">Invoice ID: {invoice.id}</p>
       </div>
 
-      <h3 className="text-xl font-semibold mb-4">Items</h3>
+      <h3 className="text-xl font-semibold mb-4">Products</h3>
       <div className="grid grid-cols-1 gap-4">
         {invoice.items.map((item: { item_id: string; item_name: string; unit_price: string; quantity: number }) => (
           <div

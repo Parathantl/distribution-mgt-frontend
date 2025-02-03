@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getItems, deleteItem } from '../../api/itemService';
+import { getProducts, deleteItem } from '../../api/itemService';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../UI/Button';
 
@@ -17,7 +17,7 @@ const ItemList = () => {
 
   useEffect(() => {
     const fetchItems = async () => {
-      const data = await getItems();
+      const data = await getProducts();
       setItems(data);
     };
     fetchItems();
@@ -30,14 +30,14 @@ const ItemList = () => {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold text-center mb-6">Item List</h1>
+      <h1 className="text-3xl font-bold text-center mb-6">Products List</h1>
 
       <Button
         variant="primary"
         onClick={() => navigate('/add-item')}
         className="mb-4"
       >
-        Add New Item
+        Add New Product
       </Button>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { addInvoice } from '../../api/invoiceService';
 import { getShops } from '../../api/shopService';
-import { getItems } from '../../api/itemService';
+import { getProducts } from '../../api/itemService';
 import Input from '../../UI/Input';
 import Select from '../../UI/Select';
 
@@ -34,9 +34,9 @@ const AddInvoice: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const shops = await getShops();
-      const items = await getItems();
+      const products = await getProducts();
       setShopList(shops);
-      setItemList(items);
+      setItemList(products);
     };
     fetchData();
   }, []);

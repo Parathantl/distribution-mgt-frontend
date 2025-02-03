@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
 import { updateItem } from '../../api/itemService';
 
-const EditItem = ({ id, currentName, currentPrice, currentStock, onUpdate }: any) => {
+interface EditItemProps {
+  id: string;
+  currentName: string;
+  currentPrice: number;
+  currentStock: number;
+  onUpdate: () => void;
+}
+
+const EditItem = ({ id, currentName, currentPrice, currentStock, onUpdate }: EditItemProps) => {
   const [name, setName] = useState(currentName);
   const [price, setPrice] = useState(currentPrice);
   const [stock, setStock] = useState(currentStock);
@@ -18,14 +26,14 @@ const EditItem = ({ id, currentName, currentPrice, currentStock, onUpdate }: any
         type="text"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        placeholder="Item Name"
+        placeholder="Product Name"
         required
       />
       <input
         type="number"
         value={price}
         onChange={(e) => setPrice(parseFloat(e.target.value))}
-        placeholder="Price"
+        placeholder="Unit Price"
         required
       />
       <input

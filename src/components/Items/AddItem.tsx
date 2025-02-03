@@ -5,11 +5,12 @@ import Input from '../../UI/Input';
 const AddItem = () => {
   const [name, setName] = useState('');
   const [price, setPrice] = useState(0);
+  const [mrp, setMrp] = useState(0);
   const [stock, setStock] = useState(0);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await addItem({ itemName: name, unitPrice: parseFloat(price.toString()), stock: stock });
+    await addItem({ itemName: name, unitPrice: parseFloat(price.toString()), mrp: parseFloat(mrp.toString()), stock: stock });
     setName('');
     setPrice(0);
     setStock(0);
@@ -20,14 +21,14 @@ const AddItem = () => {
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
         <h2 className="text-2xl font-bold text-center mb-4">Add New Item</h2>
 
-        {/* Item Name */}
+        {/* Product Name */}
         <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-1">Item Name</label>
+          <label className="block text-gray-700 font-medium mb-1">Product Name</label>
           <Input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Enter item name"
+            placeholder="Enter Product name"
             required
             className="w-full p-2 border rounded"
           />
@@ -41,6 +42,19 @@ const AddItem = () => {
             value={price}
             onChange={(e) => setPrice(parseFloat(e.target.value))}
             placeholder="Enter price"
+            required
+            className="w-full p-2 border rounded"
+          />
+        </div>
+
+                {/* MR Price */}
+          <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-1">MR Price (Rs.)</label>
+          <Input
+            type="number"
+            value={mrp}
+            onChange={(e) => setMrp(parseFloat(e.target.value))}
+            placeholder="Enter MR Price"
             required
             className="w-full p-2 border rounded"
           />

@@ -8,6 +8,8 @@ import AddInvoice from './components/Invoices/AddInvoice';
 import InvoiceDetails from './components/Invoices/InvoiceDetails';
 import ItemList from './components/Items/ItemList';
 import AddItem from './components/Items/AddItem';
+import SignUp from './components/User/SignUp';
+import LoginForm from './components/User/Login';
 
 const App = () => {
   return (
@@ -19,12 +21,16 @@ const App = () => {
         {/* Main Content */}
         <main className="flex-grow container mx-auto px-4 py-6">
           <Routes>
+
+        <Route path='/sign-up' element={<SignUp/>} />
+        <Route path='/login' element={<LoginForm/>} />
+
   {/* Shops */}
   <Route path="/" element={<ShopList />} />
         <Route path="/add-shop" element={<AddShop />} />
 
-        {/* Items */}
-        <Route path="/items" element={<ItemList />} />
+        {/* Products */}
+        <Route path="/products" element={<ItemList />} />
         <Route path="/add-item" element={<AddItem />} />
 
         {/* Invoices */}

@@ -27,14 +27,14 @@ const Header = () => {
             Invoices
           </NavLink>
           <NavLink
-            to="/items"
+            to="/products"
             className={({ isActive }) =>
               isActive
                 ? 'text-yellow-300 font-semibold'
                 : 'hover:text-yellow-300'
             }
           >
-            Items
+            Products
           </NavLink>
         </nav>
       </div>
