@@ -7,7 +7,7 @@ export const getProducts = async () => {
 };
 
 // Add a new item
-export const addItem = async (item: { itemName: string; unitPrice: number; mrp:  number; stock: number }) => {
+export const addItem = async (item: { itemName: string; unitPrice: number; mrp:  number; stock: number, expiryDate: string }) => {
   const response = await api.post('/items', item);
   return response.data;
 };

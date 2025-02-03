@@ -5,7 +5,7 @@ export const getShops = async () => {
   return response.data;
 };
 
-export const addShop = async (shop: { name: string; location: string }) => {
+export const addShop = async (shop: { name: string; location: string, phone_number: string }) => {
   const response = await api.post('/shops', shop);
   return response.data;
 };

@@ -1,7 +1,15 @@
 import { useEffect, useState } from 'react';
-import { getShops, deleteShop } from '../../api/shopService';
+import { getShops } from '../../api/shopService';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../UI/Button';
+// import { deleteShop } from '../../api/shopService';
+
+interface Shop {
+  _id: string;
+  shop_name: string;
+  location: string;
+  phone_number: string;
+}
 
 const ShopList = () => {
   const [shops, setShops] = useState([]);
@@ -15,10 +23,10 @@ const ShopList = () => {
     fetchShops();
   }, []);
 
-  const handleDelete = async (id: string) => {
-    await deleteShop(id);
-    setShops(shops.filter((shop: any) => shop._id !== id));
-  };
+  // const handleDelete = async (id: string) => {
+  //   await deleteShop(id);
+  //   setShops(shops.filter((shop: Shop) => shop._id !== id));
+  // };
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
@@ -31,7 +39,7 @@ const ShopList = () => {
         Add New Shop
       </Button>
       <div className="grid grid-cols-1 gap-4">
-        {shops.map((shop: any) => (
+        {shops.map((shop: Shop) => (
           <div
             key={shop._id}
             className="p-4 border rounded shadow flex justify-between items-center"
@@ -39,6 +47,7 @@ const ShopList = () => {
             <div>
               <h2 className="font-bold">{shop.shop_name}</h2>
               <p>{shop.location}</p>
+              <p>{shop.phone_number}</p>
             </div>
           </div>
         ))}

@@ -7,11 +7,12 @@ import Input from '../../UI/Input';
 const AddShop = () => {
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await addShop({ name, location });
+    await addShop({ name, location, phone_number: phoneNumber });
     navigate('/');
   };
 
@@ -33,6 +34,14 @@ const AddShop = () => {
           onChange={(e) => setLocation(e.target.value)}
           label="Location"
           placeholder="Enter location"
+          required
+        />
+        <Input
+          type="text"
+          value={phoneNumber}
+          onChange={(e) => setPhoneNumber(e.target.value)}
+          label="Phone Number"
+          placeholder="Enter phone number"
           required
         />
         <br/>

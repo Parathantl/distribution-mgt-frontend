@@ -6,6 +6,8 @@ import Button from '../../UI/Button';
 interface Item {
   id: number;
   item_name: string;
+  mrp: string;
+  expiry_date: string;
   unit_price: string;
   stock: string;
 }
@@ -50,7 +52,9 @@ const ItemList = () => {
               <h2 className="font-bold">{item.item_name}</h2>
               <p>Price: Rs. {parseFloat(item.unit_price).toFixed(2)}</p>
               <p>Stock: {item.stock}</p>
-            </div>
+              <p>MRP: Rs. {parseFloat(item.mrp).toFixed(2)}</p>
+              <p>Expiry Date: {new Date(item.expiry_date).toLocaleDateString()}</p>
+              </div>
             <button
               onClick={() => handleDelete(item.id)}
               className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
