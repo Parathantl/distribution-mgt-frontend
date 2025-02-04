@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
 import { loginUser } from '../../api/userService';
+import { useNavigate } from 'react-router-dom';
 
-export default function LoginForm() {
+interface LoginFormProps {
+    setIsAuthenticated: (value: boolean) => void;
+}
+
+const LoginForm: React.FC<LoginFormProps> = ({ setIsAuthenticated }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -13,6 +20,8 @@ export default function LoginForm() {
         setSuccess('');
 
         await loginUser({ username, password }).then(() => {
+            setIsAuthenticated(true);
+            navigate('/');
             setSuccess('Login successful');
         }).catch((error) => {
             setError(error.response.data.message || 'Login failed');
@@ -55,3 +64,5 @@ export default function LoginForm() {
         </div>
     );
 }
+
+export default LoginForm;
