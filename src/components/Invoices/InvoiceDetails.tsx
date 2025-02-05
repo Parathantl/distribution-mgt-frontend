@@ -21,6 +21,7 @@ const InvoiceDetails = () => {
   const { id } = useParams<{ id: string }>();
 
   const [invoice, setInvoice] = useState<Invoice | null>(null);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);  // State to hold PDF Blob URL
 
   useEffect(() => {
     const fetchInvoice = async () => {
@@ -33,74 +34,141 @@ const InvoiceDetails = () => {
     fetchInvoice();
   }, [id]);
 
-  const printInvoice = () => {
+  const generateInvoicePDF = () => {
     if (!invoice) return;
   
-    const doc = new jsPDF();
+    // ** Detect Screen Size to Set PDF Dimensions **
+    const isMobile = window.innerWidth <= 768; // Adjust breakpoint as needed
+  
+    // ** Define PDF Size Based on Device **
+    const pdfSize = isMobile
+      ? [612, 864]  // German Std Fan Fold size (8.5 x 12 inches in points)
+      : 'a4';       // A4 size for desktop
+  
+    // ** Initialize jsPDF with Dynamic Page Size **
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'pt',  // Points (1 pt = 1/72 inch)
+      format: pdfSize,
+    });
+  
+    doc.setFont('courier');
+    doc.setFontSize(14);
   
     // ** Add Company Name & Address **
-    doc.setFontSize(18);
-    doc.setTextColor(40);
-    doc.text('Parathan Traders', 105, 15, { align: 'center' });
+    doc.setFontSize(isMobile ? 24 : 32);  // Adjust font size for mobile
+    doc.text('Haritdra Distributors', doc.internal.pageSize.getWidth() / 2, 30, { align: 'center' });
   
-    doc.setFontSize(12);
-    doc.setTextColor(100);
-    doc.text('Kilinnochchi West, Kilinochchi', 105, 22, { align: 'center' });
-    doc.text('Tel: 0774545789', 105, 28, { align: 'center' });
+    doc.setFontSize(isMobile ? 10 : 12);
+    doc.text('"Solar Farm", 3 1/4 Mile Post, Mannar Road', doc.internal.pageSize.getWidth() / 2, 50, { align: 'center' });
+    doc.text('Nelukkulam, Vavuniya.', doc.internal.pageSize.getWidth() / 2, 65, { align: 'center' });
+    doc.text('024 222 4777     ,     0774656974', doc.internal.pageSize.getWidth() / 2, 80, { align: 'center' });
   
-    // ** Invoice Title **
-    doc.setFontSize(20);
-    doc.setTextColor(20);
-    doc.text('SALES INVOICE', 105, 40, { align: 'center' });
+    // ** Invoice & Customer Details as a Table **
+    const headerTable = [
+      [
+        { content: `Customer Name: ${invoice.shop_name}`, styles: { halign: 'left' } },
+        { content: `Invoice No: Rep/HDV/${invoice.id}`, styles: { halign: 'left' } },
+      ],
+      [
+        { content: '', styles: { halign: 'left' } },
+        { content: `Invoice Date: ${new Date(invoice.created_at).toLocaleDateString()}`, styles: { halign: 'left' } },
+      ]
+    ];
   
-    // ** Invoice & Shop Details **
-    doc.setFontSize(12);
-    doc.setTextColor(50);
-    doc.text(`Invoice ID: ${invoice.id}`, 20, 50);
-    doc.text(`Shop Name: ${invoice.shop_name}`, 20, 58);
-    doc.text(`Date: ${new Date(invoice.created_at).toLocaleDateString()}`, 20, 66);
+    doc.autoTable({
+      startY: 100,
+      head: [],
+      body: headerTable,
+      theme: 'plain', // No borders for a clean look
+      styles: {
+        font: 'courier',
+        fontSize: isMobile ? 9 : 11,
+        cellPadding: isMobile ? 1 : 2,
+        overflow: 'linebreak',  // Allow text to wrap
+      },
+      columnStyles: {
+        0: { cellWidth: isMobile ? 160 : 250 },  // Left column width
+        1: { cellWidth: isMobile ? 120 : 200 },  // Right column width
+      },
+    });
   
-    // ** Invoice Table (Item Details) **
-    const tableColumn = ['Product Name', 'Unit Price (Rs.)', 'Quantity', 'Total (Rs.)'];
+    // ** Invoice Table (Product Details) **
+    const tableColumn = ['No.', 'Product Name', 'MRP', 'Qty Units', 'Unit Price', 'Total Amount'];
     const tableRows: (string | number)[][] = [];
   
-    invoice.items.forEach((item: { item_id: string; item_name: string; unit_price: string; quantity: number }) => {
+    invoice.items.forEach((item, index) => {
+      const totalAmount = (parseFloat(item.unit_price) * item.quantity).toFixed(2);
       const itemData = [
+        index + 1,
         item.item_name,
         parseFloat(item.unit_price).toFixed(2),
-        item.quantity,
-        (parseFloat(item.unit_price) * item.quantity).toFixed(2),
+        `${item.quantity} pcs`,
+        parseFloat(item.unit_price).toFixed(2),
+        totalAmount,
       ];
       tableRows.push(itemData);
     });
   
     doc.autoTable({
-      startY: 75,
+      startY: doc.lastAutoTable.finalY + 10,
       head: [tableColumn],
       body: tableRows,
-      theme: 'grid',
-      headStyles: { fillColor: [0, 0, 0], textColor: [255, 255, 255] }, // Black header with white text
-      styles: { fontSize: 11, halign: 'center' },
-      columnStyles: { 0: { halign: 'left' }, 1: { halign: 'right' }, 2: { halign: 'center' }, 3: { halign: 'right' } },
+      theme: 'grid', 
+      headStyles: { 
+        fillColor: [255, 255, 255],
+        textColor: [0, 0, 0],
+        fontStyle: 'bold',
+        lineWidth: 0.5,
+      },
+      styles: { 
+        font: 'courier',
+        fontSize: isMobile ? 9 : 11,
+        halign: 'center',
+        fillColor: [255, 255, 255],
+        textColor: [0, 0, 0],
+      },
+      columnStyles: {
+        0: { halign: 'center' }, 
+        1: { halign: 'left' },   
+        2: { halign: 'right' },  
+        3: { halign: 'center' }, 
+        4: { halign: 'right' },  
+        5: { halign: 'right' },  
+      },
     });
   
     // ** Total Calculation **
     let finalY = doc.lastAutoTable.finalY + 10;
-    doc.setFontSize(12);
-    doc.text(`Total Products: ${invoice.items.length}`, 20, finalY);
-    doc.text(`Subtotal: Rs. ${parseFloat(invoice.total_amount).toFixed(2)}`, 150, finalY);
-    finalY += 8;
+    doc.setFontSize(isMobile ? 12 : 14);
+    doc.text(`Total: Rs. ${parseFloat(invoice.total_amount).toFixed(2)}`, doc.internal.pageSize.getWidth() - 40, finalY+10, { align: 'right' });
   
-    // ** Add Footer **
-    doc.setDrawColor(0);
-    doc.line(20, finalY, 190, finalY);
-    doc.setFontSize(10);
-    doc.text('Thank you for your business!', 105, finalY + 10, { align: 'center' });
+    // ** Footer for Signatures **
+    finalY += 20;
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const footerY = finalY + 50;
   
-    // ** Save the Document **
-    doc.save(`Invoice_${invoice.id}.pdf`);
+    const columnWidth = pageWidth / 3;
+    
+    doc.setFontSize(isMobile ? 10 : 12);
+    doc.text('Customer Seal', columnWidth * 0.5, footerY, { align: 'center' });
+    doc.text('Customer Signature', columnWidth * 1.5, footerY, { align: 'center' });
+    doc.text('Sales Rep Signature', columnWidth * 2.5, footerY, { align: 'center' });
+  
+    // ** Generate Blob for Preview **
+    const pdfBlob = doc.output('blob');
+    const blobUrl = URL.createObjectURL(pdfBlob);
+    setPdfUrl(blobUrl);
   };
   
+  const downloadInvoice = () => {
+    if (!pdfUrl) return;
+
+    const link = document.createElement('a');
+    link.href = pdfUrl;
+    link.download = `Invoice_${invoice?.id}.pdf`;
+    link.click();
+  };
 
   if (!invoice) {
     return <div className="p-6 text-center">Loading invoice...</div>;
@@ -109,6 +177,7 @@ const InvoiceDetails = () => {
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold text-center mb-6">Invoice Details</h1>
+
       <div className="border p-4 rounded shadow mb-4">
         <h2 className="font-bold text-lg">Shop: {invoice.shop_name}</h2>
         <p className="text-gray-500">Date: {new Date(invoice.created_at).toLocaleDateString()}</p>
@@ -117,37 +186,55 @@ const InvoiceDetails = () => {
 
       <h3 className="text-xl font-semibold mb-4">Products</h3>
       <div className="grid grid-cols-1 gap-4">
-        {invoice.items.map((item: { item_id: string; item_name: string; unit_price: string; quantity: number }) => (
-          <div
-            key={item.item_id}
-            className="p-4 border rounded shadow flex justify-between"
-          >
+        {invoice.items.map((item) => (
+          <div key={item.item_id} className="p-4 border rounded shadow flex justify-between">
             <div>
               <p className="font-medium">{item.item_name}</p>
               <p className="text-gray-500">Price: Rs. {parseFloat(item.unit_price).toFixed(2)}</p>
             </div>
             <div>
               <p>Quantity: {item.quantity}</p>
-              <p>
-                Subtotal: Rs. {(parseFloat(item.unit_price) * item.quantity).toFixed(2)}
-              </p>
+              <p>Subtotal: Rs. {(parseFloat(item.unit_price) * item.quantity).toFixed(2)}</p>
             </div>
           </div>
         ))}
       </div>
 
       <div className="mt-6 p-4 border-t-2 border-gray-200">
-        <h3 className="text-xl font-bold text-right">
-          Total: Rs. {parseFloat(invoice.total_amount).toFixed(2)}
-        </h3>
+        <h3 className="text-xl font-bold text-right">Total: Rs. {parseFloat(invoice.total_amount).toFixed(2)}</h3>
       </div>
 
-      <button
-        onClick={printInvoice}
-        className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-      >
-        Print Invoice
-      </button>
+      <div className="flex justify-center mt-6">
+        <button
+          onClick={generateInvoicePDF}
+          className="bg-blue-500 text-white px-4 py-2 rounded mr-4"
+        >
+          Preview Invoice
+        </button>
+
+        {pdfUrl && (
+          <button
+            onClick={downloadInvoice}
+            className="bg-green-500 text-white px-4 py-2 rounded"
+          >
+            Download Invoice
+          </button>
+        )}
+      </div>
+
+      {/* PDF Preview */}
+      {pdfUrl && (
+        <div className="mt-6">
+          <h3 className="text-xl font-semibold text-center mb-4">PDF Preview</h3>
+          <iframe
+            src={pdfUrl}
+            width="100%"
+            height="500px"
+            title="Invoice PDF Preview"
+            className="border rounded shadow"
+          ></iframe>
+        </div>
+      )}
     </div>
   );
 };
