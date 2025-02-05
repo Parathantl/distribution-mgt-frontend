@@ -55,12 +55,12 @@ const ItemList = () => {
               <p>MRP: Rs. {parseFloat(item.mrp).toFixed(2)}</p>
               <p>Expiry Date: {new Date(item.expiry_date).toLocaleDateString()}</p>
               </div>
-            <button
+            {/* <button
               onClick={() => handleDelete(item.id)}
               className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
             >
               Delete
-            </button>
+            </button> */}
           </div>
         ))}
       </div>

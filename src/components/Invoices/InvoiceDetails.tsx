@@ -7,13 +7,16 @@ import 'jspdf-autotable';
 interface Invoice {
   id: string;
   shop_name: string;
+  location: string;
   created_at: string;
   total_amount: string;
   items: {
     item_id: string;
     item_name: string;
+    mrp: string;
     unit_price: string;
     quantity: number;
+    total_price: string;
   }[];
 }
 
@@ -64,6 +67,8 @@ const InvoiceDetails = () => {
     doc.text('Nelukkulam, Vavuniya.', doc.internal.pageSize.getWidth() / 2, 65, { align: 'center' });
     doc.text('024 222 4777     ,     0774656974', doc.internal.pageSize.getWidth() / 2, 80, { align: 'center' });
   
+    doc.text('VAT No: 106828814-7000', doc.internal.pageSize.getWidth() - 20, 100, { align: 'right' });
+
     // ** Invoice & Customer Details as a Table **
     const headerTable = [
       [
@@ -71,13 +76,13 @@ const InvoiceDetails = () => {
         { content: `Invoice No: Rep/HDV/${invoice.id}`, styles: { halign: 'left' } },
       ],
       [
-        { content: '', styles: { halign: 'left' } },
+        { content: `Customer Address: ${invoice.location}`, styles: { halign: 'left' } },
         { content: `Invoice Date: ${new Date(invoice.created_at).toLocaleDateString()}`, styles: { halign: 'left' } },
       ]
     ];
   
     doc.autoTable({
-      startY: 100,
+      startY: 110,
       head: [],
       body: headerTable,
       theme: 'plain', // No borders for a clean look
@@ -94,16 +99,16 @@ const InvoiceDetails = () => {
     });
   
     // ** Invoice Table (Product Details) **
-    const tableColumn = ['No.', 'Product Name', 'MRP', 'Qty Units', 'Unit Price', 'Total Amount'];
+    const tableColumn = ['No.', 'Product Name', 'MRP', 'Qty', 'Unit Price', 'Total Amount'];
     const tableRows: (string | number)[][] = [];
   
     invoice.items.forEach((item, index) => {
-      const totalAmount = (parseFloat(item.unit_price) * item.quantity).toFixed(2);
+      const totalAmount = (parseFloat(item.total_price));
       const itemData = [
         index + 1,
         item.item_name,
-        parseFloat(item.unit_price).toFixed(2),
-        `${item.quantity} pcs`,
+        parseFloat(item.mrp).toFixed(2),
+        `${item.quantity}`,
         parseFloat(item.unit_price).toFixed(2),
         totalAmount,
       ];

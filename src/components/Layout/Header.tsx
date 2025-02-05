@@ -8,7 +8,7 @@ const Header = () => {
   return (
     <header className="bg-blue-600 text-white shadow">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        <h1 className="text-xl font-bold">Parathan Traders</h1>
+        <h1 className="text-xl font-bold">EasyDist</h1>
 
         {/* Mobile Menu Button */}
         <button
