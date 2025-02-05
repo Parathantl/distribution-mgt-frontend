@@ -54,13 +54,25 @@ const ItemList = () => {
               <p>Stock: {item.stock}</p>
               <p>MRP: Rs. {parseFloat(item.mrp).toFixed(2)}</p>
               <p>Expiry Date: {new Date(item.expiry_date).toLocaleDateString()}</p>
-              </div>
-            {/* <button
-              onClick={() => handleDelete(item.id)}
-              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-            >
-              Delete
-            </button> */}
+            </div>
+
+            <div className="flex space-x-2">
+              <Button
+                variant="secondary"
+                onClick={() => navigate(`/item/${item.id}`)}
+                className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
+              >
+                Edit
+              </Button>
+
+              <Button
+                variant="danger"
+                onClick={() => handleDelete(item.id)}
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+              >
+                Delete
+              </Button>
+            </div>
           </div>
         ))}
       </div>

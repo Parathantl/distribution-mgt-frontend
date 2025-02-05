@@ -57,12 +57,12 @@ const InvoiceList = () => {
               >
                 View Details
               </Button>
-              {/* <Button
+              <Button
                 variant="danger"
                 onClick={() => handleDelete(invoice.id)}
               >
                 Delete
-              </Button> */}
+              </Button>
             </div>
           </div>
         ))}

@@ -6,6 +6,11 @@ export const getProducts = async () => {
   return response.data;
 };
 
+export const getItemById = async (id: string) => {
+  const response = await api.get(`/items/${id}`);
+  return response.data;
+}
+
 // Add a new item
 export const addItem = async (item: { itemName: string; unitPrice: number; mrp:  number; stock: number, expiryDate: string }) => {
   const response = await api.post('/items', item);
@@ -13,7 +18,7 @@ export const addItem = async (item: { itemName: string; unitPrice: number; mrp: 
 };
 
 // Update an item
-export const updateItem = async (id: string, item: { name: string; price: number; stock: number }) => {
+export const updateItem = async (id: string, item: { itemName: string; unitPrice: number; mrp:  number; stock: number, expiryDate: string }) => {
   const response = await api.put(`/items/${id}`, item);
   return response.data;
 };

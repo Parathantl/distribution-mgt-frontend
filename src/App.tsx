@@ -8,10 +8,10 @@ import InvoiceList from './components/Invoices/InvoiceList';
 import AddInvoice from './components/Invoices/AddInvoice';
 import InvoiceDetails from './components/Invoices/InvoiceDetails';
 import ItemList from './components/Items/ItemList';
-import AddItem from './components/Items/AddItem';
 import SignUp from './components/User/SignUp';
 import LoginForm from './components/User/Login';
 import api from './api/api';
+import ItemForm from './components/Items/ItemForm';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -53,8 +53,8 @@ const App = () => {
             <Route path="/" element={isAuthenticated ? <ShopList /> : <Navigate to="/login" />} />
             <Route path="/add-shop" element={isAuthenticated ? <AddShop /> : <Navigate to="/login" />} />
             <Route path="/products" element={isAuthenticated ? <ItemList /> : <Navigate to="/login" />} />
-            <Route path="/add-item" element={isAuthenticated ? <AddItem /> : <Navigate to="/login" />} />
-            <Route path="/invoices" element={isAuthenticated ? <InvoiceList /> : <Navigate to="/login" />} />
+            <Route path="/add-item" element={isAuthenticated ? <ItemForm /> : <Navigate to="/login" />} />
+            <Route path="/item/:id" element={isAuthenticated ? <ItemForm /> : <Navigate to="/login" />} />            <Route path="/invoices" element={isAuthenticated ? <InvoiceList /> : <Navigate to="/login" />} />
             <Route path="/add-invoice" element={isAuthenticated ? <AddInvoice /> : <Navigate to="/login" />} />
             <Route path="/invoices/:id" element={isAuthenticated ? <InvoiceDetails /> : <Navigate to="/login" />} />
           </Routes>

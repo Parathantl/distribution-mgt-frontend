@@ -1,25 +1,64 @@
-import React, { useState } from 'react';
-import { addItem } from '../../api/itemService';
+import React, { useState, useEffect } from 'react';
+import { addItem, updateItem, getItemById } from '../../api/itemService';
 import Input from '../../UI/Input';
 import DatePicker from 'react-datepicker';
+import { useNavigate, useParams } from 'react-router-dom';
 import 'react-datepicker/dist/react-datepicker.css';
 
-const AddItem = () => {
+const ItemForm = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const isEditMode = Boolean(id);
+
   const [name, setName] = useState('');
   const [price, setPrice] = useState(0);
   const [mrp, setMrp] = useState(0);
   const [stock, setStock] = useState(0);
   const [expiryDate, setExpiryDate] = useState<Date | null>(null);
 
+  useEffect(() => {
+    if (isEditMode) {
+      const fetchItemData = async () => {
+        try {
+          const itemData = await getItemById(id || ''); // Ensure id is always a string
+          setName(itemData.item_name);
+          setPrice(itemData.unit_price);
+          setMrp(itemData.mrp);
+          setStock(itemData.stock);
+          setExpiryDate(itemData.expiry_date ? new Date(itemData.expiry_date) : null);
+        } catch (error) {
+          console.error('Failed to fetch item data', error);
+        }
+      };
+      fetchItemData();
+    }
+  }, [id, isEditMode]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await addItem({ 
-      itemName: name, 
-      unitPrice: parseFloat(price.toString()), 
-      mrp: parseFloat(mrp.toString()), 
-      stock: parseFloat(stock.toString()), 
-      expiryDate: expiryDate ? expiryDate.toISOString().split('T')[0] : '' 
-    });
+
+    const itemPayload = {
+      itemName: name,
+      unitPrice: parseFloat(price.toString()),
+      mrp: parseFloat(mrp.toString()),
+      stock: parseFloat(stock.toString()),
+      expiryDate: expiryDate ? expiryDate.toISOString().split('T')[0] : ''
+    };
+
+    try {
+      if (isEditMode) {
+        await updateItem(id || '', itemPayload);
+      } else {
+        await addItem(itemPayload);
+      }
+      resetForm();
+      navigate('/products');
+    } catch (error) {
+      console.error('Failed to submit item', error);
+    }
+  };
+
+  const resetForm = () => {
     setName('');
     setPrice(0);
     setMrp(0);
@@ -30,7 +69,9 @@ const AddItem = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-        <h2 className="text-2xl font-bold text-center mb-4">Add New Item</h2>
+        <h2 className="text-2xl font-bold text-center mb-4">
+          {isEditMode ? 'Edit Item' : 'Add New Item'}
+        </h2>
 
         {/* Product Name */}
         <div className="mb-4">
@@ -102,11 +143,11 @@ const AddItem = () => {
           type="submit"
           className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition-all duration-300"
         >
-          Add Item
+          {isEditMode ? 'Update Item' : 'Add Item'}
         </button>
       </form>
     </div>
   );
 };
 
-export default AddItem;
+export default ItemForm;
