@@ -62,7 +62,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setIsAuthenticated }) => {
                     Login
                 </button>
             </form>
-            <Link to="/sign-up" className="block text-center mt-4 text-blue-500 hover:underline">Don't have an account? Sign up here</Link>
+            {/* <Link to="/sign-up" className="block text-center mt-4 text-blue-500 hover:underline">Don't have an account? Sign up here</Link> */}
         </div>
     );
 }
