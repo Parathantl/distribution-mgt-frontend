@@ -3,7 +3,7 @@ import axios from 'axios';
 axios.defaults.withCredentials = true;
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: 'https://distribution-mgt-backend.onrender.com/api',
   headers: {
     'Content-Type': 'application/json',
   },
