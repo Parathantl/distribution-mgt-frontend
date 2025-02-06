@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { loginUser } from '../../api/userService';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 interface LoginFormProps {
     setIsAuthenticated: (value: boolean) => void;
@@ -61,6 +62,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setIsAuthenticated }) => {
                     Login
                 </button>
             </form>
+            <Link to="/sign-up" className="block text-center mt-4 text-blue-500 hover:underline">Don't have an account? Sign up here</Link>
         </div>
     );
 }
