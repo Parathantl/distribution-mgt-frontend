@@ -160,7 +160,7 @@ const InvoiceDetails = () => {
   
     // ** Footer for Signatures **
     finalY += 20;
-    const pageWidth = doc.internal.pageSize.getWidth();
+        
     const footerY = finalY + 50;
   
     const columnWidth = pageWidth / 3;
