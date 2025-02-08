@@ -7,6 +7,7 @@ import 'jspdf-autotable';
 interface Invoice {
   id: string;
   shop_name: string;
+  phone_number: string;
   location: string;
   created_at: string;
   total_amount: string;
@@ -87,7 +88,7 @@ const InvoiceDetails = () => {
       { content: `Invoice Date: ${new Date(invoice.created_at).toLocaleDateString()}`, styles: { halign: 'left' } },
     ],
     [
-      { content: `Customer Number:: ${invoice.shop_name}`, styles: { halign: 'left' } },
+      { content: `Customer Number:: ${invoice.phone_number}`, styles: { halign: 'left' } },
     ]
   ];
 
