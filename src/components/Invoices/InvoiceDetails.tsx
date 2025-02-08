@@ -69,34 +69,44 @@ const InvoiceDetails = () => {
   
     doc.text('VAT No: 106828814-7000', doc.internal.pageSize.getWidth() / 2, 100, { align: 'center' });
 
-    // ** Invoice & Customer Details as a Table **
-    const headerTable = [
-      [
-        { content: `Customer Name: ${invoice.shop_name}`, styles: { halign: 'left' } },
-        { content: `Invoice No: Rep/HDV/${invoice.id}`, styles: { halign: 'left' } },
-      ],
-      [
-        { content: `Customer Address: ${invoice.location}`, styles: { halign: 'left' } },
-        { content: `Invoice Date: ${new Date(invoice.created_at).toLocaleDateString()}`, styles: { halign: 'left' } },
-      ]
-    ];
-  
-    doc.autoTable({
-      startY: 110,
-      head: [],
-      body: headerTable,
-      theme: 'plain', // No borders for a clean look
-      styles: {
-        font: 'courier',
-        fontSize: isMobile ? 9 : 11,
-        cellPadding: isMobile ? 1 : 2,
-        overflow: 'linebreak',  // Allow text to wrap
-      },
-      columnStyles: {
-        0: { cellWidth: isMobile ? 160 : 250 },  // Left column width
-        1: { cellWidth: isMobile ? 160 : 250, halign: 'right' },  // Right column width
-      },
-    });
+  // Get total page width
+  const pageWidth = doc.internal.pageSize.width;
+
+  // Define column widths as percentages
+  const firstColumnWidth = pageWidth * 0.6;  // 60% of the page width
+  const secondColumnWidth = pageWidth * 0.4; // 40% of the page width
+
+  // ** Invoice & Customer Details as a Table **
+  const headerTable = [
+    [
+      { content: `Customer Name: ${invoice.shop_name}`, styles: { halign: 'left' } },
+      { content: `Invoice No: Rep/HDV/${invoice.id}`, styles: { halign: 'left' } },
+    ],
+    [
+      { content: `Customer Address: ${invoice.location}`, styles: { halign: 'left' } },
+      { content: `Invoice Date: ${new Date(invoice.created_at).toLocaleDateString()}`, styles: { halign: 'left' } },
+    ],
+    [
+      { content: `Customer Number:: ${invoice.shop_name}`, styles: { halign: 'left' } },
+    ]
+  ];
+
+  doc.autoTable({
+    startY: 110,
+    head: [],
+    body: headerTable,
+    theme: 'plain',
+    styles: {
+      font: 'courier',
+      fontSize: isMobile ? 9 : 11,
+      cellPadding: isMobile ? 1 : 2,
+      overflow: 'linebreak',
+    },
+    columnStyles: {
+      0: { cellWidth: firstColumnWidth },  // First column takes 60% of the page
+      1: { cellWidth: secondColumnWidth }, // Second column takes 40% of the page
+    },
+  });
   
     // ** Invoice Table (Product Details) **
     const tableColumn = ['No.', 'Product Name', 'MRP', 'Qty', 'Unit Price', 'Total Amount'];
