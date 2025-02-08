@@ -67,7 +67,7 @@ const InvoiceDetails = () => {
     doc.text('Nelukkulam, Vavuniya.', doc.internal.pageSize.getWidth() / 2, 65, { align: 'center' });
     doc.text('024 222 4777     ,     0774656974', doc.internal.pageSize.getWidth() / 2, 80, { align: 'center' });
   
-    doc.text('VAT No: 106828814-7000', doc.internal.pageSize.getWidth() - 20, 100, { align: 'right' });
+    doc.text('VAT No: 106828814-7000', doc.internal.pageSize.getWidth() / 2, 100, { align: 'center' });
 
     // ** Invoice & Customer Details as a Table **
     const headerTable = [
@@ -94,7 +94,7 @@ const InvoiceDetails = () => {
       },
       columnStyles: {
         0: { cellWidth: isMobile ? 160 : 250 },  // Left column width
-        1: { cellWidth: isMobile ? 120 : 200 },  // Right column width
+        1: { cellWidth: isMobile ? 160 : 250, halign: 'right' },  // Right column width
       },
     });
   
@@ -110,7 +110,7 @@ const InvoiceDetails = () => {
         parseFloat(item.mrp).toFixed(2),
         `${item.quantity}`,
         parseFloat(item.unit_price).toFixed(2),
-        totalAmount,
+        totalAmount.toFixed(2),
       ];
       tableRows.push(itemData);
     });
